@@ -11,6 +11,11 @@
 		272C738D92E9004239B9EB88 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD1A2E0CCDAE9283C2C6FEA /* AudioManager.swift */; };
 		4950FC50FE027FAA1A43F504 /* PomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EEFFB7247980C622713 /* PomodoroApp.swift */; };
 		49D54B0231FAEDCE4FC5295F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAB1DFB44BEA94C764EBDB2 /* SettingsView.swift */; };
+		A11C0C0A1E0D4A6A9EED0001 /* ColorEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C0C0A1E0D4A6A9EED0002 /* ColorEditor.swift */; };
+		B20000000000000000000002 /* FocusTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* FocusTask.swift */; };
+		B20000000000000000000004 /* FocusTaskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* FocusTaskStoreTests.swift */; };
+		D10000000000000000000002 /* PopoverPinningState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000001 /* PopoverPinningState.swift */; };
+		D10000000000000000000004 /* PopoverPinningStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000003 /* PopoverPinningStateTests.swift */; };
 		4E8939235A35A280A7559A03 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37381671A153838D503EE9C5 /* StatsView.swift */; };
 		5B7A3D6EBAE14B465D575FDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D210016A34658A1F56C6E47 /* AppDelegate.swift */; };
 		63A355ABD4A5C1DDCCC77BCE /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B7EFE4A7E2E55B6638A50 /* PopoverView.swift */; };
@@ -35,6 +40,12 @@
 		8FD1A2E0CCDAE9283C2C6FEA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		976B7EFE4A7E2E55B6638A50 /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
 		9AAB1DFB44BEA94C764EBDB2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A11C0C0A1E0D4A6A9EED0002 /* ColorEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorEditor.swift; sourceTree = "<group>"; };
+		B20000000000000000000001 /* FocusTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusTask.swift; sourceTree = "<group>"; };
+		B20000000000000000000003 /* FocusTaskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusTaskStoreTests.swift; sourceTree = "<group>"; };
+		D10000000000000000000001 /* PopoverPinningState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverPinningState.swift; sourceTree = "<group>"; };
+		D10000000000000000000003 /* PopoverPinningStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverPinningStateTests.swift; sourceTree = "<group>"; };
+		D10000000000000000000005 /* PomodorinoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodorinoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C03E2934F1C9BB7E3B861233 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
 		DC8D99F625247939824CF210 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		F1B23EEFFB7247980C622713 /* PomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroApp.swift; sourceTree = "<group>"; };
@@ -46,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				976B7EFE4A7E2E55B6638A50 /* PopoverView.swift */,
+				A11C0C0A1E0D4A6A9EED0002 /* ColorEditor.swift */,
 				9AAB1DFB44BEA94C764EBDB2 /* SettingsView.swift */,
 				37381671A153838D503EE9C5 /* StatsView.swift */,
 				DC8D99F625247939824CF210 /* TimerView.swift */,
@@ -57,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				63C3248B9FAB5C802C03D8BA /* Pomodoro.app */,
+				D10000000000000000000005 /* PomodorinoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				386C7C26EC13AE794F4AA179 /* Pomodorino */,
+				D10000000000000000000006 /* PomodorinoTests */,
 				2E8674BBDE16B20B81905870 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				7D210016A34658A1F56C6E47 /* AppDelegate.swift */,
+				D10000000000000000000001 /* PopoverPinningState.swift */,
 				F1B23EEFFB7247980C622713 /* PomodoroApp.swift */,
 			);
 			path = App;
@@ -113,13 +128,33 @@
 			children = (
 				118D4931A2DD42063819DC15 /* AnalyticsStore.swift */,
 				512BDB4D07FBA84442EAAEE0 /* AppSettings.swift */,
+				B20000000000000000000001 /* FocusTask.swift */,
 				2DAFB17DC0B0E7418FDD1AB7 /* PomodoroTimer.swift */,
 				C03E2934F1C9BB7E3B861233 /* TimerState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
+		D10000000000000000000006 /* PomodorinoTests */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000003 /* FocusTaskStoreTests.swift */,
+				D10000000000000000000003 /* PopoverPinningStateTests.swift */,
+			);
+			path = PomodorinoTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		D1000000000000000000000C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 696C6DDA24A5C4A402796F89 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7903707A219EEB0A29FD23BD;
+			remoteInfo = Pomodorino;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXNativeTarget section */
 		7903707A219EEB0A29FD23BD /* Pomodorino */ = {
@@ -139,6 +174,24 @@
 			productName = Pomodorino;
 			productReference = 63C3248B9FAB5C802C03D8BA /* Pomodoro.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D10000000000000000000007 /* PomodorinoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D10000000000000000000009 /* Build configuration list for PBXNativeTarget "PomodorinoTests" */;
+			buildPhases = (
+				D10000000000000000000008 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D1000000000000000000000D /* PBXTargetDependency */,
+			);
+			name = PomodorinoTests;
+			packageProductDependencies = (
+			);
+			productName = PomodorinoTests;
+			productReference = D10000000000000000000005 /* PomodorinoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -164,9 +217,18 @@
 			projectRoot = "";
 			targets = (
 				7903707A219EEB0A29FD23BD /* Pomodorino */,
+				D10000000000000000000007 /* PomodorinoTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXTargetDependency section */
+		D1000000000000000000000D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7903707A219EEB0A29FD23BD /* Pomodorino */;
+			targetProxy = D1000000000000000000000C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4E9E285D4E4C573489FD28D2 /* Resources */ = {
@@ -184,19 +246,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B20000000000000000000002 /* FocusTask.swift in Sources */,
 				04048280808E26ED7E3C2900 /* AnalyticsStore.swift in Sources */,
 				5B7A3D6EBAE14B465D575FDC /* AppDelegate.swift in Sources */,
+				D10000000000000000000002 /* PopoverPinningState.swift in Sources */,
 				D1A0C9EF55913345091D2485 /* AppSettings.swift in Sources */,
 				272C738D92E9004239B9EB88 /* AudioManager.swift in Sources */,
 				F2439FE84AFAB857758952F6 /* NotificationManager.swift in Sources */,
 				4950FC50FE027FAA1A43F504 /* PomodoroApp.swift in Sources */,
 				CC353F41D19EE0A1026E640D /* PomodoroTimer.swift in Sources */,
 				63A355ABD4A5C1DDCCC77BCE /* PopoverView.swift in Sources */,
+				A11C0C0A1E0D4A6A9EED0001 /* ColorEditor.swift in Sources */,
 				49D54B0231FAEDCE4FC5295F /* SettingsView.swift in Sources */,
 				E41ACADC483D0044E88CB611 /* ShortcutManager.swift in Sources */,
 				4E8939235A35A280A7559A03 /* StatsView.swift in Sources */,
 				F2A1BFEA49ED39DA80F8D57C /* TimerState.swift in Sources */,
 				98C52C1B0E8494FF90FDA923 /* TimerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D10000000000000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000004 /* FocusTaskStoreTests.swift in Sources */,
+				D10000000000000000000004 /* PopoverPinningStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +436,32 @@
 			};
 			name = Debug;
 		};
+		D1000000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pomodoro.app.tests;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodorino.app/Contents/MacOS/Pomodorino";
+			};
+			name = Debug;
+		};
+		D1000000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pomodoro.app.tests;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pomodorino.app/Contents/MacOS/Pomodorino";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -379,6 +479,15 @@
 			buildConfigurations = (
 				CEBBBBB923CEF08235AC4782 /* Debug */,
 				512B3EE945CEE8DEC77C6F51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D10000000000000000000009 /* Build configuration list for PBXNativeTarget "PomodorinoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1000000000000000000000A /* Debug */,
+				D1000000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

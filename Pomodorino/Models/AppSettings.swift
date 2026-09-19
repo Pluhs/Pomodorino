@@ -1,6 +1,50 @@
-import Foundation
+import AppKit
 import Combine
+import Foundation
 import ServiceManagement
+import SwiftUI
+
+struct StoredColor: Codable, Equatable {
+    let red: Double
+    let green: Double
+    let blue: Double
+    let alpha: Double
+
+    init(red: Double, green: Double, blue: Double, alpha: Double = 1) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
+
+    init(color: Color) {
+        self.init(nsColor: NSColor(color))
+    }
+
+    init(nsColor: NSColor) {
+        let nsColor = nsColor.usingColorSpace(.sRGB) ?? .controlAccentColor
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 1
+        nsColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    var color: Color {
+        Color(.sRGB, red: red, green: green, blue: blue, opacity: alpha)
+    }
+
+    var nsColor: NSColor {
+        NSColor(srgbRed: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    static let accentDefault = StoredColor(red: 0.039, green: 0.518, blue: 1)
+    static let workDefault = StoredColor(red: 1, green: 0.231, blue: 0.188)
+    static let breakDefault = StoredColor(red: 0.204, green: 0.78, blue: 0.349)
+    static let pausedDefault = StoredColor(red: 0.56, green: 0.56, blue: 0.58)
+}
 
 class AppSettings: ObservableObject {
     @Published var workDuration: Int {
@@ -36,6 +80,21 @@ class AppSettings: ObservableObject {
     @Published var shortcutModifiers: Int {
         didSet { UserDefaults.standard.set(shortcutModifiers, forKey: "shortcutModifiers") }
     }
+    @Published var accentColor: StoredColor {
+        didSet { saveColor(accentColor, forKey: "accentColor") }
+    }
+    @Published var workTimerColor: StoredColor {
+        didSet { saveColor(workTimerColor, forKey: "workTimerColor") }
+    }
+    @Published var breakTimerColor: StoredColor {
+        didSet { saveColor(breakTimerColor, forKey: "breakTimerColor") }
+    }
+    @Published var pausedTimerColor: StoredColor {
+        didSet { saveColor(pausedTimerColor, forKey: "pausedTimerColor") }
+    }
+    @Published var menuBarPillEnabled: Bool {
+        didSet { UserDefaults.standard.set(menuBarPillEnabled, forKey: "menuBarPillEnabled") }
+    }
 
     init() {
         let defaults = UserDefaults.standard
@@ -51,6 +110,7 @@ class AppSettings: ObservableObject {
             "launchAtLogin": false,
             "shortcutKeyCode": 35,
             "shortcutModifiers": 6144,
+            "menuBarPillEnabled": true,
         ])
 
         self.workDuration = defaults.integer(forKey: "workDuration")
@@ -63,6 +123,11 @@ class AppSettings: ObservableObject {
         self.launchAtLogin = defaults.bool(forKey: "launchAtLogin")
         self.shortcutKeyCode = defaults.integer(forKey: "shortcutKeyCode")
         self.shortcutModifiers = defaults.integer(forKey: "shortcutModifiers")
+        self.accentColor = Self.loadColor(forKey: "accentColor", default: .accentDefault)
+        self.workTimerColor = Self.loadColor(forKey: "workTimerColor", default: .workDefault)
+        self.breakTimerColor = Self.loadColor(forKey: "breakTimerColor", default: .breakDefault)
+        self.pausedTimerColor = Self.loadColor(forKey: "pausedTimerColor", default: .pausedDefault)
+        self.menuBarPillEnabled = defaults.bool(forKey: "menuBarPillEnabled")
     }
 
     private func updateLaunchAtLogin() {
@@ -75,5 +140,26 @@ class AppSettings: ObservableObject {
         } catch {
             print("Launch at login error: \(error)")
         }
+    }
+
+    func resetColors() {
+        accentColor = .accentDefault
+        workTimerColor = .workDefault
+        breakTimerColor = .breakDefault
+        pausedTimerColor = .pausedDefault
+    }
+
+    private static func loadColor(forKey key: String, default defaultColor: StoredColor) -> StoredColor {
+        guard let data = UserDefaults.standard.data(forKey: key),
+              let color = try? JSONDecoder().decode(StoredColor.self, from: data)
+        else {
+            return defaultColor
+        }
+        return color
+    }
+
+    private func saveColor(_ color: StoredColor, forKey key: String) {
+        guard let data = try? JSONEncoder().encode(color) else { return }
+        UserDefaults.standard.set(data, forKey: key)
     }
 }

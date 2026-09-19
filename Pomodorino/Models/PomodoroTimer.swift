@@ -11,18 +11,41 @@ class PomodoroTimer: ObservableObject {
     let settings: AppSettings
     private let audioManager: AudioManager
     private let analyticsStore: AnalyticsStore
+    private let taskStore: FocusTaskStore
     private var timer: Timer?
     private var endDate: Date?
     private var cancellables = Set<AnyCancellable>()
+    private var activeWorkTaskID: UUID?
+    private var activeWorkDurationMinutes: Int?
+    private var currentTaskID: UUID?
+    private struct SavedTimer {
+        let remaining: TimeInterval
+        let state: TimerState
+        let session: SessionType
+        let sessionIndex: Int
+        let workMinutes: Int?
+    }
+    private var savedTimers: [UUID?: SavedTimer] = [:]
+    @Published var quickTimerMinutes: Int = 25
 
     var onSessionComplete: ((SessionType) -> Void)?
 
     var totalDuration: TimeInterval {
         switch sessionType {
-        case .work: return TimeInterval(settings.workDuration * 60)
+        case .work:
+            return TimeInterval(workDurationMinutes * 60)
         case .shortBreak: return TimeInterval(settings.shortBreakDuration * 60)
         case .longBreak: return TimeInterval(settings.longBreakDuration * 60)
         }
+    }
+
+    /// The task currently driving the work timer. While a work session is
+    /// active this remains a snapshot, even if the task list is edited.
+    var activeFocusTask: FocusTask? {
+        if let activeWorkTaskID {
+            return taskStore.task(withID: activeWorkTaskID)
+        }
+        return taskStore.task(withID: currentTaskID)
     }
 
     var progress: Double {
@@ -37,11 +60,19 @@ class PomodoroTimer: ObservableObject {
         return String(format: "%02d:%02d", minutes, seconds)
     }
 
-    init(settings: AppSettings, audioManager: AudioManager, analyticsStore: AnalyticsStore) {
+    init(
+        settings: AppSettings,
+        audioManager: AudioManager,
+        analyticsStore: AnalyticsStore,
+        taskStore: FocusTaskStore
+    ) {
         self.settings = settings
         self.audioManager = audioManager
         self.analyticsStore = analyticsStore
-        self.timeRemaining = TimeInterval(settings.workDuration * 60)
+        self.taskStore = taskStore
+        self.currentTaskID = taskStore.selectedTaskID
+        self.quickTimerMinutes = settings.workDuration
+        self.timeRemaining = TimeInterval((taskStore.selectedTask?.plannedMinutes ?? settings.workDuration) * 60)
 
         // Update timeRemaining when settings change while idle
         Publishers.CombineLatest3(
@@ -56,12 +87,56 @@ class PomodoroTimer: ObservableObject {
             self.timeRemaining = self.totalDuration
         }
         .store(in: &cancellables)
+
+        Publishers.CombineLatest(taskStore.$tasks, taskStore.$selectedTaskID)
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _, _ in
+                guard let self else { return }
+                self.selectTask(id: self.taskStore.selectedTaskID)
+                if self.timerState == .idle { self.timeRemaining = self.totalDuration }
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Only the selected timer runs. Switching parks the previous timer;
+    /// returning restores it paused, ready for an explicit Resume.
+    func selectTask(id: UUID?) {
+        guard id != currentTaskID else { return }
+        pause()
+        savedTimers[currentTaskID] = SavedTimer(
+            remaining: timeRemaining, state: timerState, session: sessionType,
+            sessionIndex: currentSessionIndex, workMinutes: activeWorkDurationMinutes
+        )
+        currentTaskID = id
+        taskStore.selectTask(id: id)
+        clearActiveWorkTask()
+        if let saved = savedTimers.removeValue(forKey: id) {
+            sessionType = saved.session
+            currentSessionIndex = saved.sessionIndex
+            activeWorkDurationMinutes = saved.workMinutes
+            activeWorkTaskID = id
+            timerState = saved.state
+            timeRemaining = saved.remaining
+        } else {
+            sessionType = .work
+            currentSessionIndex = 0
+            timerState = .idle
+            timeRemaining = totalDuration
+        }
+    }
+
+    func setQuickTimerMinutes(_ minutes: Int) {
+        guard currentTaskID == nil, timerState == .idle, sessionType == .work else { return }
+        quickTimerMinutes = min(max(minutes, 1), 480)
+        timeRemaining = totalDuration
     }
 
     func start() {
         guard timerState != .running else { return }
 
         if timerState == .idle {
+            captureCurrentWorkTaskIfNeeded()
             timeRemaining = totalDuration
         }
 
@@ -92,6 +167,7 @@ class PomodoroTimer: ObservableObject {
         stopTimer()
         endDate = nil
         timerState = .idle
+        clearActiveWorkTask()
         timeRemaining = totalDuration
     }
 
@@ -100,6 +176,7 @@ class PomodoroTimer: ObservableObject {
         endDate = nil
         let completedType = sessionType
         if sessionType == .work {
+            clearActiveWorkTask()
             transitionToBreak()
         } else {
             transitionToWork()
@@ -150,9 +227,13 @@ class PomodoroTimer: ObservableObject {
         let completedType = sessionType
 
         if sessionType == .work {
+            let completedDuration = totalDuration
+            let completedTaskID = activeWorkTaskID
             completedPomodoros += 1
             currentSessionIndex += 1
-            analyticsStore.recordCompletedPomodoro(focusMinutes: settings.workDuration)
+            analyticsStore.recordCompletedPomodoro(focusMinutes: Int(completedDuration / 60))
+            taskStore.recordCompletedFocus(taskID: completedTaskID, seconds: completedDuration)
+            clearActiveWorkTask()
             transitionToBreak()
         } else {
             transitionToWork()
@@ -162,6 +243,7 @@ class PomodoroTimer: ObservableObject {
     }
 
     private func transitionToBreak() {
+        timerState = .idle
         if currentSessionIndex >= settings.pomodorosBeforeLongBreak {
             sessionType = .longBreak
             currentSessionIndex = 0
@@ -178,7 +260,9 @@ class PomodoroTimer: ObservableObject {
     }
 
     private func transitionToWork() {
+        timerState = .idle
         sessionType = .work
+        clearActiveWorkTask()
         timeRemaining = totalDuration
 
         if settings.autoStartNextSession {
@@ -186,5 +270,20 @@ class PomodoroTimer: ObservableObject {
         } else {
             timerState = .idle
         }
+    }
+
+    private var workDurationMinutes: Int {
+        activeWorkDurationMinutes ?? taskStore.task(withID: currentTaskID)?.plannedMinutes ?? quickTimerMinutes
+    }
+
+    private func captureCurrentWorkTaskIfNeeded() {
+        guard sessionType == .work else { return }
+        activeWorkTaskID = currentTaskID
+        activeWorkDurationMinutes = taskStore.task(withID: currentTaskID)?.plannedMinutes ?? quickTimerMinutes
+    }
+
+    private func clearActiveWorkTask() {
+        activeWorkTaskID = nil
+        activeWorkDurationMinutes = nil
     }
 }

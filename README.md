@@ -70,6 +70,8 @@ Apps like Session and Flow offer more features—but at a cost:
 - **Menu bar timer** — Always visible countdown
 - **One-click controls** — Start, pause, reset, skip
 - **Global shortcut** — Toggle from anywhere; customize it in Settings
+- **Menu-bar actions** — Right-click the menu-bar timer to open Settings or quit the app
+- **Custom colors** — Accent, work, break, and paused timer colors
 - **Completion chimes** — With 10-second countdown ticker
 - **Local analytics** — Daily, weekly, monthly stats
 - **Launch at login** — Always ready
@@ -139,6 +141,7 @@ After 4 pomodoros, you get a long break. That's it.
 - Auto-start next session
 - Audio on/off
 - Custom global Start/Pause shortcut
+- Custom accent and timer-state colors
 - Launch at login
 
 ---
